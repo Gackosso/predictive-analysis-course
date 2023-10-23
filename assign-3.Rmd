@@ -1,0 +1,87 @@
+---
+title: "assign-3"
+output: html_document
+date: "2023-10-20"
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Assign-3: **Using SQL in R**
+
+```{r}
+{library(RODBC)}
+```
+
+```{r}
+{library(tidyverse)}
+```
+
+```{r}
+{db_conn <- odbcConnect("myDatabase", rows_at_time = 1)}
+```
+
+```{r}
+{test_1 <- "
+SELECT 
+    SalesTerritory.Name AS TerritoryName, 
+    SUM(SalesOrderHeader.TotalDue) AS TotalSales
+FROM 
+    Sales.SalesOrderHeader SalesOrderHeader
+    INNER JOIN Sales.SalesTerritory Salesterritory ON SalesTerritory.TerritoryID = SalesOrderHeader.TerritoryID
+GROUP BY 
+    Salesterritory.Name
+ORDER BY 
+    TotalSales DESC"}
+```
+
+```{r}
+{sol_1 <- sqlQuery(db_conn,
+                       test_1,
+                       stringsAsFactors = FALSE)}
+```
+
+## Including Plots
+
+You can also embed plots, for example:
+
+```{r pressure, echo=FALSE}
+plot(pressure)
+```
+
+```{r}
+{ggplot(sol_1, aes(x="" ,y=TotalSales,fill=TerritoryName)) +
+  geom_bar(stat = "identity",color = "black")+
+  coord_polar(theta = "y")+
+  ggtitle("Total Regional Sales")}
+```
+
+```{r}
+{test_2 <- "SELECT top 10
+  p.Name AS ProductName, 
+  SUM(sod.LineTotal) AS TotalProfit
+FROM 
+  Sales.SalesOrderDetail AS sod 
+  INNER JOIN Production.Product AS p ON sod.ProductID = p.ProductID
+GROUP BY 
+  p.Name 
+ORDER BY 
+  TotalProfit DESC"}
+```
+
+```{r}
+{sol_2 <- sqlQuery(db_conn,
+                  test_2,
+                  stringsAsFactors = FALSE)}
+```
+
+```{r}
+{ggplot(sol_2, aes(x=TotalProfit, y=ProductName,),state = "identity") + 
+  geom_bar(stat = "identity",fill = "blue")+
+  geom_point(aes(x=TotalProfit, y=ProductName),stat="identity",group = 1,color = "yellow"     ,shape = 15, size = 5)+
+  ylab("ProductName")+
+  xlab("TotalProfit")+
+  ggtitle("Most Profitable Products")+
+  theme(plot.title = element_text(hjust = 0.5))}
+```
