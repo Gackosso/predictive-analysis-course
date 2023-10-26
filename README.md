@@ -8,3 +8,7 @@ This repository consists of code for the predictive analysis course at SAIT coll
 # Assignment 2  Data Wrangling and visualization: https://github.com/Gackosso/predictive-analysis-course/commit/35e5427e1002bcbf715b24dcde54aad6d3cb69a1
 
 # Assignment 3 using SQLin R : https://github.com/Gackosso/predictive-analysis-course/blob/main/assign-3.Rmd
+
+# Assignment 4 : Linear Regression
+1. https://github.com/Gackosso/predictive-analysis-course/blob/main/assignment4_coffee_bloodpressure.Rmd
+2. 
