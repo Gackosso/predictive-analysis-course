@@ -1,0 +1,136 @@
+---
+title: "assignment4_dentalservice"
+output: html_document
+date: "2023-10-25"
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r}
+library(tidyverse)
+```
+
+read csv
+
+```{r}
+df_dental <- read.csv("dentalservice.csv")
+```
+scatter plot to check relation between feature
+and target variables
+
+Dentistsvisits and Income
+```{r}
+df_dental %>% 
+  ggplot(aes(DentistVisits, Income)) +
+  geom_point() +
+  geom_smooth(method = "lm") +
+  labs(x = "DentistVisits", y = "Income",
+       title = "DentistVisits vs Income")
+```
+
+Price and Income
+```{r}
+df_dental %>% 
+  ggplot(aes(Price, Income)) +
+  geom_point() +
+  geom_smooth(method = "lm") +
+  labs(x = "Price", y = "Income",
+       title = "Price vs Income")
+```
+
+There is a relatioship between Price and Income. 
+As the price increase, the income increase as well
+
+split the dataset
+```{r}
+set.seed(1)
+df_dental$id <- 1:nrow(df_dental)
+```
+
+```{r}
+view(df_dental)
+```
+
+```{r}
+train_dental <- df_dental %>% sample_frac(0.80)
+```
+
+```{r}
+test_dental <- anti_join(df_dental, train_dental,
+                       by="id")
+```
+
+train the model
+```{r}
+model5 <- lm (Income ~ Price,
+              data = train_dental)
+```
+```{r}
+summary(model5)
+```
+
+test the model
+```{r}
+test_dental$predicted_values <- predict(model5, test_dental)
+view(test_dental)
+```
+
+calculate the error
+```{r}
+error <- sqrt(mean(((test_dental$Income) -
+                      test_dental$predicted_values))^2)
+```
+
+```{r}
+print(error)
+```
+The regression line is positive, and the error is 2.62 close to zero, 
+there is a weak relationship between income est price
+
+predict(modelname, dataframe)
+
+```{r}
+predict(model5, data.frame(Price=c(50, 90, 200)))
+```
+
+prediction of $50 as price gives 66.59 as Income and
+prediction of $200 as price gives 296.52 as Income
+
+adding row in dataframe
+
+```{r}
+df2 <- df_dental %>%
+  add_row(Income = 67, DentistVisits = 0, Price = 50, id = 50)
+```
+
+```{r}
+
+df2 <- df2 %>%
+ add_row(Income = 297, DentistVisits = 0, Price = 200, id = 51)
+```
+
+```{r}
+df3 <- tail(df2, 2)
+```
+
+Add both new values to the scatter linear graph
+```{r}
+df2 %>% 
+  ggplot(aes(Price, Income)) +
+  geom_point() +
+  geom_point(data = df3, aes(Price, Income),
+             color = "red",
+             size = 5) +
+  geom_smooth(method = "lm") +
+  labs(x = "Price", y = "Income",
+       title = "Price vs Income")
+```
+
+
+```{r pressure, echo=FALSE}
+plot(pressure)
+```
+
+Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.

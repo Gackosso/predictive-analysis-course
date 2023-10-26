@@ -1,0 +1,108 @@
+---
+title: "assignment4_coffeebloodpressure"
+output: html_document
+date: "2023-10-25"
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## R Markdown
+
+```{r}
+{library(tidyverse)}
+```
+
+
+read csv
+```{r}
+df_coffee <- read.csv("coffeebloodpressure.csv")
+```
+
+CupsCoffee and BloodPressure Scatter Plot
+```{r}
+df_coffee %>% 
+  ggplot(aes(CupsCoffee, BloodPressure)) +
+  geom_point() +
+  geom_smooth(method = "lm") +
+  labs(x = "CupsCoffee", y = "BloodPressure",
+       title = "CupsCoffee vs BloodPressure")
+```
+
+split the dataset
+```{r}
+set.seed(1)
+df_coffee$id <- 1:nrow(df_coffee)
+view(df_coffee)
+```
+
+```{r}
+train_coffee <- df_coffee %>% sample_frac(0.80)
+test_coffee <- anti_join(df_coffee, train_coffee,
+                       by="id")
+```
+
+
+train the model
+
+```{r}
+model3 <- lm (BloodPressure ~ CupsCoffee, 
+              data = train_coffee)
+```
+
+```{r}
+summary(model3)
+```
+
+
+
+test the model
+
+```{r}
+test_coffee$predicted_values <- predict(model3, test_coffee)
+
+```
+
+```{r}
+view(test_coffee)
+```
+
+calculate the error
+
+```{r}
+error <- sqrt(mean(((test_coffee$BloodPressure) -
+                      test_coffee$predicted_values))^2)
+```
+
+```{r}
+print(error)
+```
+
+
+
+1. Find the correlation between coffee consumption and blood pressure using the scatter plot
+
+The model has been train and test, and the error calculed is 2.62, which is close to zero (0), there is no correlation or relationship between coffee consumption and blood pressure
+
+2. Describe the relationship between coffee consumption and blood pressure and explain what someone should do if their doctor says that their blood pressure is a concern.
+
+since there is a weak relationship between coffee consumption and blood pression, so coffee consumption will not affect your blood pressure
+
+3. Train the model and predict the values for 8 and 6 cups of coffee in a day.
+
+predict(modelname, dataframe)
+
+```{r}
+predict(model3, data.frame(CupsCoffee=c(5, 6, 8)))
+```
+prediction of 6 cups of coffee gives 148.14 of blood pressure
+
+prediction of 8 cups of coffee gives 152.21 of blood pressure
+
+
+```{r pressure, echo=FALSE}
+plot(pressure)
+```
+
+Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
