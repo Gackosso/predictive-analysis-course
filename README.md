@@ -13,3 +13,5 @@ This repository consists of code for the predictive analysis course at SAIT coll
 1. https://github.com/Gackosso/predictive-analysis-course/blob/main/assignment4_coffee_bloodpressure.Rmd
 2. https://github.com/Gackosso/predictive-analysis-course/blob/main/assignment4_dentalservice.Rmd
    
+# Assignment 5: k-means  at https://github.com/Gackosso/predictive-analysis-course/blob/main/assignment-5-kmeans.Rmd
+
