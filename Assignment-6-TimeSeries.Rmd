@@ -1,0 +1,98 @@
+---
+title: "Assignment-6-TimeSeries"
+output: html_document
+date: "2023-10-27"
+---
+
+```{r}
+library(tidyverse)
+library(forecast)
+
+```
+
+1.  Load the dataset into a data frame
+
+```{r}
+retaildata <- read.csv("retaildata.csv")
+view(retaildata)
+```
+
+convert it into time series
+
+```{r}
+ts_year1 <- ts(data = retaildata$Sales,
+              start = c(2018,1),
+              end = c(2023,12),
+              frequency = 12)
+```
+
+```{r}
+print(ts_year1)
+```
+
+2.Create a decomposition plot
+
+```{r}
+ retaildata_decompose <- decompose(ts_year1)
+```
+
+```{r}
+plot(retaildata_decompose)
+```
+
+```{r}
+data_log <- log(ts_year1)
+```
+
+```{r}
+plot(data_log)
+```
+
+3.  Train the model using ARIMA dataset
+
+```{r}
+model5 <- auto.arima(data_log)
+```
+
+4.  Forecast the sales for the next 4, 8 and 12 months
+
+```{r}
+h <- forecast(model5, h = 4)
+```
+
+```{r}
+print(h)
+```
+
+
+```{r}
+print(exp(as.data.frame(h)))
+```
+
+```{r}
+i <- forecast(model5, h = 8)
+```
+
+```{r}
+print(i)
+```
+
+
+```{r}
+print(exp(as.data.frame(i)))
+```
+
+```{r}
+j <- forecast(model5, h = 12)
+```
+
+```{r}
+print(j)
+```
+
+```{r}
+print(exp(as.data.frame(j)))
+```
+
+
+
