@@ -15,3 +15,4 @@ This repository consists of code for the predictive analysis course at SAIT coll
    
 # Assignment 5: k-means  at https://github.com/Gackosso/predictive-analysis-course/blob/main/assignment-5-kmeans.Rmd
 
+# Assignment 6: Time Series at https://github.com/Gackosso/predictive-analysis-course/blob/main/Assignment-6-TimeSeries.Rmd
