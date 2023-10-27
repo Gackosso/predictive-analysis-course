@@ -1,0 +1,85 @@
+---
+title: "assignment-5-kmeans"
+output: html_document
+date: "2023-10-26"
+---
+
+```{r}
+library(tidyverse)
+library(stats)
+library(ggfortify)
+library(factoextra)
+```
+
+Load the dataset mammal_Sleep.csv into a data frame.
+```{r}
+sleep <- read.csv("mammalsleep.csv")
+```
+
+```{r}
+view(sleep)
+```
+
+Create a new data frame mammalSleep with sleep_total and sleep_rem.
+```{r}
+mmsleep <- sleep[,c(7,8)]
+```
+
+```{r}
+view(mmsleep)
+```
+
+Replace NA value with mean
+```{r}
+mmsleep$sleep_rem[is.na(mmsleep$sleep_rem)] <- mean(mmsleep$sleep_rem,na.rm = TRUE)
+view(mmsleep)
+```
+
+scale the dataset
+```{r}
+mmsleep_scale <- scale(mmsleep)
+```
+
+```{r}
+fviz_nbclust(mmsleep_scale, kmeans, method = "wss") +
+  labs(subtitle = "Elbow method")
+```
+
+```{r pressure, echo=FALSE}
+plot(pressure)
+```
+
+```{r}
+mmsleep_scale <- scale(mmsleep)
+```
+
+
+Fit a k-means clustering model with 4 clusters to the data subset mammalSleep.
+```{r}
+model_mmsleep <- kmeans(mmsleep_scale,centers = 4, nstart = 1)
+```
+
+cluster plot
+boundary around the clusters
+```{r}
+autoplot(model_mmsleep, mmsleep_scale, frame= TRUE)
+```
+
+visualize it in a better way
+```{r}
+mmsleep.clusters <- model_mmsleep$cluster
+```
+
+```{r}
+rownames(mmsleep_scale) <- paste(sleep$name,
+                               1:dim(sleep)[1],
+                               sep = "_")
+
+```
+
+
+Find the centroids of the clusters in the model on the chart 
+```{r}
+fviz_cluster(list(data=mmsleep_scale,
+                  cluster = mmsleep.clusters))
+```
